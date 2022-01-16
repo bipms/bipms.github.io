@@ -1,13 +1,21 @@
+# streamlit_app.py
+
 import streamlit as st
-import pandas as pd
+from gsheetsdb import connect
 
+# Create a connection object.
+conn = connect()
 
-st.sidebar.write("**Silahkan pilih nama UMKM/Klaster Anda**")
-st.sidebar.selectbox('Nama UMKM/Klaster',[1,2,3])
-st.sidebar.button('Pilih')
+# Perform SQL query on the Google Sheet.
+# Uses st.cache to only rerun when the query changes or after 10 min.
+@st.cache(ttl=600)
+def run_query(query):
+    rows = conn.execute(query, headers=1)
+    return rows
 
+sheet_url = st.secrets["public_gsheets_url"]
+rows = run_query(f'SELECT * FROM "{sheet_url}"')
 
-option = st.sidebar.selectbox(
-     'How would you like to be contacted?',
-     ('Email', 'Home phone', 'Mobile phone'))
-st.sidebar.write('Produk yang dicatat di SIKEPANG:')
+# Print results.
+for row in rows:
+    st.write(f"{row.name} has a :{row.pet}:")
