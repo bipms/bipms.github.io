@@ -11,6 +11,3 @@ option = st.sidebar.selectbox(
      'How would you like to be contacted?',
      ('Email', 'Home phone', 'Mobile phone'))
 st.sidebar.write('Produk yang dicatat di SIKEPANG:')
-st.sidebar.table('')
-
-
